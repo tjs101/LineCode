@@ -16,6 +16,11 @@ class DragView: NSImageView {
     var settingsBtn: NSButton?
     var totalTitleLabel: NSTextField?
     
+    // 文件变量
+    var fileCount: Int = 0 // 文件数量
+    var dirCount: Int  = 0 // 文件夹数量
+    var fileLineCount: Int = 0 // 多少行代码
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
      
@@ -89,7 +94,7 @@ class DragView: NSImageView {
         placeholderTitleLabel?.isHidden = true
         
         totalTitleLabel?.isHidden = false
-        totalTitleLabel?.stringValue = "共0个文件 0行代码"
+        totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount + dirCount, fileLineCount)
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -101,20 +106,40 @@ class DragView: NSImageView {
         
         let pasteBoard: NSPasteboard = sender.draggingPasteboard()
 
-        let files: NSArray = pasteBoard.propertyList(forType: NSFilenamesPboardType) as! NSArray
+        let filePaths: NSArray = pasteBoard.propertyList(forType: NSFilenamesPboardType) as! NSArray
         
-        NSLog("files path == %@", files)
+        NSLog("files path == %@", filePaths)
+
+        for path in filePaths {
+            subpathsOfPath(path: path as! String)
+        }
         
+        updateView()
+        
+        return true
+    }
+    
+    func subpathsOfPath(path: String) {
         let fileManager: FileManager = FileManager.default
         
         do {
-            let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: files.lastObject as! String) as NSArray
+            let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: path) as NSArray
             NSLog("paths==%@", paths)
-        } catch {
-            NSLog("fileManager")
-        }
+            
+            if paths.count > 0 {
+                NSLog("文件夹")
+                for aPath in paths {
+                    subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
+                }
+            }
+            else {
+                NSLog("文件")
+                fileCount += 1
+            }
 
-        return true
+        } catch {
+            NSLog("fileManager error")
+        }
     }
     
     required init?(coder: NSCoder) {
