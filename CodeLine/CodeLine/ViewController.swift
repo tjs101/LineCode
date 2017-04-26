@@ -10,13 +10,16 @@ import Cocoa
 
 class ViewController: NSViewController {
 
+    var backgroundImage: DragView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.view.layer?.backgroundColor = CGColor.init(red: 6, green: 6, blue: 6, alpha: 1)
+        backgroundImage = DragView.init(frame: self.view.frame)
+        self.view.addSubview(backgroundImage!)
     }
-
+    
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
