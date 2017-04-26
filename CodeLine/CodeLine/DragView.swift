@@ -15,17 +15,27 @@ class DragView: NSImageView {
     var placeholderTitleLabel: NSTextField?
     var settingsBtn: NSButton?
     var totalTitleLabel: NSTextField?
+    var bgScrollView: NSScrollView?
     
     // 文件变量
     var fileCount: Int = 0 // 文件数量
-    var dirCount: Int  = 0 // 文件夹数量
+    var folderCount: Int  = 0 // 文件夹数量
     var fileLineCount: Int = 0 // 多少行代码
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
      
         // background
         self.image = NSImage.init(named: "background")
+        
+        // bg scroll view
+        bgScrollView = NSScrollView.init(frame: NSMakeRect(0, 50, self.frame.width, self.frame.height - 50))
+        bgScrollView?.backgroundColor = NSColor.init(patternImage: NSImage.init(named: "background")!)
+        self.addSubview(bgScrollView!)
         
         var x: CGFloat = 0, y: CGFloat = 0
         let width: CGFloat = 130, height: CGFloat = width
@@ -34,6 +44,8 @@ class DragView: NSImageView {
         let placeholderImage: NSImage = NSImage.init(named: "placeholder")!
         
         placeholderImageView = NSImageView.init(image: placeholderImage)
+        placeholderImageView?.isEnabled = false
+        placeholderImageView?.isEditable = false
         self.addSubview(placeholderImageView!)
         
         // placeholder title label
@@ -94,7 +106,7 @@ class DragView: NSImageView {
         placeholderTitleLabel?.isHidden = true
         
         totalTitleLabel?.isHidden = false
-        totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount + dirCount, fileLineCount)
+        totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount + folderCount, fileLineCount)
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -110,30 +122,78 @@ class DragView: NSImageView {
         
         NSLog("files path == %@", filePaths)
 
-        for path in filePaths {
-            subpathsOfPath(path: path as! String)
+        for view: NSView in bgScrollView!.subviews {
+            if view.isKind(of: CodeCellView.classForCoder()) {
+                view.removeFromSuperview()
+            }
         }
         
-        updateView()
+        fileCount = 0
+        folderCount = 0
+        fileLineCount = 0
         
+        var y: CGFloat = 0
+        var index: Int = 1 // 索引
+        
+        for path in filePaths {
+            
+            DispatchQueue.global().async(execute: { () -> Void in
+                self.subpathsOfPath(path: path as! String)
+                
+                DispatchQueue.main.async(execute: {
+                    self.updateView()
+                })
+            })
+
+            // file type
+            var fileType: FileAttributeType = FileAttributeType.typeUnknown;
+            do {
+                let attributes: NSDictionary = try FileManager.default.attributesOfItem(atPath: path as! String) as NSDictionary
+                fileType = attributes.object(forKey: FileAttributeKey.type) as! FileAttributeType
+
+            } catch {
+                
+            }
+            
+            let cell: CodeCellView = CodeCellView.init(frame: NSMakeRect(0, y, self.frame.width, CodeCellView.cellHeight))
+            cell.cellType = (fileType == FileAttributeType.typeDirectory) ? CellType.folder : CellType.file
+            cell.titleLabel?.stringValue = String.init(format: "%d.%@", index, filenameWithPath(path: path as! String))
+            bgScrollView?.addSubview(cell)
+            
+            y += CodeCellView.cellHeight
+            index += 1
+        }
+
         return true
     }
     
+    // 所有文件
     func subpathsOfPath(path: String) {
         let fileManager: FileManager = FileManager.default
         
         do {
-            let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: path) as NSArray
-            NSLog("paths==%@", paths)
-            
-            if paths.count > 0 {
-                NSLog("文件夹")
-                for aPath in paths {
-                    subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
+            let attributes: NSDictionary = try fileManager.attributesOfItem(atPath: path) as NSDictionary
+            let fileType: FileAttributeType = attributes.object(forKey: FileAttributeKey.type) as! FileAttributeType
+
+            if fileType == FileAttributeType.typeDirectory {// folder
+                
+                let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: path) as NSArray
+                
+                if paths.count > 0 {
+                    
+                    for aPath in paths {
+                        
+                        DispatchQueue.global().async(execute: { () -> Void in
+                            self.subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
+                            
+                            DispatchQueue.main.async(execute: {
+                                self.updateView()
+                            })
+                        })
+                    }
                 }
             }
-            else {
-                NSLog("文件")
+            else { // file
                 fileCount += 1
             }
 
@@ -141,9 +201,12 @@ class DragView: NSImageView {
             NSLog("fileManager error")
         }
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    // 文件名称
+    func filenameWithPath(path: String) -> String {
+        
+        let filenames: NSArray = path.components(separatedBy: "/") as NSArray
+        
+        return filenames.lastObject as! String
     }
-    
 }

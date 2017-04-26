@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		66324CB11EAF552C0070E0E3 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66324CB01EAF552C0070E0E3 /* DragView.swift */; };
+		66324CB31EB077480070E0E3 /* CodeCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66324CB21EB077480070E0E3 /* CodeCellView.swift */; };
 		66C116F41EAF31E4003A0AC7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C116F31EAF31E4003A0AC7 /* AppDelegate.swift */; };
 		66C116F61EAF31E4003A0AC7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C116F51EAF31E4003A0AC7 /* ViewController.swift */; };
 		66C116F81EAF31E4003A0AC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66C116F71EAF31E4003A0AC7 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		66324CB01EAF552C0070E0E3 /* DragView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
+		66324CB21EB077480070E0E3 /* CodeCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeCellView.swift; sourceTree = "<group>"; };
 		66C116F01EAF31E4003A0AC7 /* CodeLine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeLine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66C116F31EAF31E4003A0AC7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		66C116F51EAF31E4003A0AC7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 				66C116F31EAF31E4003A0AC7 /* AppDelegate.swift */,
 				66C116F51EAF31E4003A0AC7 /* ViewController.swift */,
 				66324CB01EAF552C0070E0E3 /* DragView.swift */,
+				66324CB21EB077480070E0E3 /* CodeCellView.swift */,
 				66C116F71EAF31E4003A0AC7 /* Assets.xcassets */,
 				66C116F91EAF31E4003A0AC7 /* Main.storyboard */,
 				66C116FC1EAF31E4003A0AC7 /* Info.plist */,
@@ -138,6 +141,7 @@
 				66C116F61EAF31E4003A0AC7 /* ViewController.swift in Sources */,
 				66C116F41EAF31E4003A0AC7 /* AppDelegate.swift in Sources */,
 				66324CB11EAF552C0070E0E3 /* DragView.swift in Sources */,
+				66324CB31EB077480070E0E3 /* CodeCellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
