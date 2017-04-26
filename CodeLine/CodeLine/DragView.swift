@@ -97,6 +97,26 @@ class DragView: NSImageView {
         return NSDragOperation.copy
     }
     
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        
+        let pasteBoard: NSPasteboard = sender.draggingPasteboard()
+
+        let files: NSArray = pasteBoard.propertyList(forType: NSFilenamesPboardType) as! NSArray
+        
+        NSLog("files path == %@", files)
+        
+        let fileManager: FileManager = FileManager.default
+        
+        do {
+            let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: files.lastObject as! String) as NSArray
+            NSLog("paths==%@", paths)
+        } catch {
+            NSLog("fileManager")
+        }
+
+        return true
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
