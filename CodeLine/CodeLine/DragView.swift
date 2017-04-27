@@ -21,7 +21,7 @@ class DragView: NSImageView {
     var fileCount: Int = 0 // 文件数量
     var folderCount: Int  = 0 // 文件夹数量
     var fileLineCount: Int = 0 // 多少行代码
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -98,16 +98,38 @@ class DragView: NSImageView {
     }
     
     func onSettingsClick() {
-        self.superview?.frame = NSMakeRect(0, 0, self.superview!.frame.width + 200, self.superview!.frame.height)
-        NSLog("self.superview %f %f", self.superview!.frame.height, self.superview!.frame.width)
+
+        let storyboard: NSStoryboard = NSStoryboard.init(name: "Main", bundle: nil)
+        let settingsViewCtrl: NSViewController = storyboard.instantiateController(withIdentifier: "settings") as! NSViewController
+        let initViewCtrl: NSViewController = storyboard.instantiateController(withIdentifier: "init") as! NSViewController
+        initViewCtrl.presentViewControllerAsModalWindow(settingsViewCtrl)
+        
     }
     
-    func updateView() {
+    func updateView(filePath: String) {
         placeholderImageView?.isHidden = true
         placeholderTitleLabel?.isHidden = true
         
         totalTitleLabel?.isHidden = false
         totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount + folderCount, fileLineCount)
+//        totalTitleLabel?.attributedStringValue = NSAttributedString.init(string: "adf", attributes: [NSForegroundColorAttributeName : NSColor.red])
+//        
+//        NSMutableAttributedString
+        
+        for view in bgScrollView!.subviews {
+            
+            if view.isKind(of: CodeCellView.self) {
+                
+                let cellView: CodeCellView = view as! CodeCellView
+                
+                if cellView.filePath == filePath {
+                    cellView.finished = true
+                    cellView.layout()
+                }
+                
+            }
+            
+        }
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -132,7 +154,7 @@ class DragView: NSImageView {
         fileCount = 0
         folderCount = 0
         fileLineCount = 0
-        
+
         var y: CGFloat = 0
         var index: Int = 1 // 索引
         
@@ -141,9 +163,9 @@ class DragView: NSImageView {
             DispatchQueue.global().async(execute: { () -> Void in
                 
                 self.subpathsOfPath(path: path as! String)
-                
+
                 DispatchQueue.main.async(execute: {
-                    self.updateView()
+                    self.updateView(filePath: path as! String)
                 })
             })
 
@@ -160,6 +182,7 @@ class DragView: NSImageView {
             cell.cellType = (fileType == FileAttributeType.typeDirectory) ? CellType.folder : CellType.file
             cell.titleLabel?.stringValue = String.init(format: "%d.%@", index, filenameWithPath(path: path as! String))
             cell.countLabel?.stringValue = "统计中.."
+            cell.filePath = path as? String
             bgScrollView?.addSubview(cell)
             
             y += CodeCellView.cellHeight
@@ -185,12 +208,10 @@ class DragView: NSImageView {
                     
                     for aPath in paths {
                         
-                        DispatchQueue.global().async(execute: { () -> Void in
-                            self.subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
-                            
-                            DispatchQueue.main.async(execute: {
-                                self.updateView()
-                            })
+                        self.subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
+                        
+                        DispatchQueue.main.async(execute: {
+                            self.updateView(filePath: path)
                         })
                     }
                 }
@@ -201,7 +222,7 @@ class DragView: NSImageView {
                 }
                 
                 DispatchQueue.main.async(execute: {
-                    self.updateView()
+                    self.updateView(filePath: path)
                 })
             }
 

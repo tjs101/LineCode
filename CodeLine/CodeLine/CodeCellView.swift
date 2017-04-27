@@ -25,6 +25,7 @@ class CodeCellView: NSView {
     
     var cellType: CellType?
     var finished: Bool = false
+    var filePath: String?
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -63,7 +64,7 @@ class CodeCellView: NSView {
         countLabel?.textColor = NSColor.red
         self.addSubview(countLabel!)
     }
-    
+
     override func layout() {
         super.layout()
         
