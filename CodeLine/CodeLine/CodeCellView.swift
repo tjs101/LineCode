@@ -16,12 +16,15 @@ enum CellType {
 
 class CodeCellView: NSView {
     
-    static let cellHeight: CGFloat = 60
+    static let cellHeight: CGFloat = 78
     
     var iconImageView: NSImageView?
     var titleLabel: NSTextField?
+    var countLabel: NSTextField?
+    private var finishedImageView: NSImageView?
     
     var cellType: CellType?
+    var finished: Bool = false
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,6 +37,10 @@ class CodeCellView: NSView {
         iconImageView = NSImageView.init()
         self.addSubview(iconImageView!)
         
+        // finished imageView
+        finishedImageView = NSImageView.init(image: NSImage.init(named: "finished")!)
+        self.addSubview(finishedImageView!)
+        
         // title label
         titleLabel = NSTextField.init()
         titleLabel?.alignment = NSTextAlignment.left
@@ -44,6 +51,17 @@ class CodeCellView: NSView {
         titleLabel?.font = NSFont.boldSystemFont(ofSize: 13)
         titleLabel?.textColor = NSColor.black
         self.addSubview(titleLabel!)
+        
+        // count label
+        countLabel = NSTextField.init()
+        countLabel?.alignment = NSTextAlignment.left
+        countLabel?.isEditable = false
+        countLabel?.isBordered = false
+        countLabel?.isEnabled = false
+        countLabel?.backgroundColor = NSColor.clear
+        countLabel?.font = NSFont.boldSystemFont(ofSize: 13)
+        countLabel?.textColor = NSColor.red
+        self.addSubview(countLabel!)
     }
     
     override func layout() {
@@ -68,6 +86,16 @@ class CodeCellView: NSView {
         x = 58 + 10
         y = self.frame.height - 20 - 15
         titleLabel?.frame = NSMakeRect(x, y, self.frame.width - x, 20);
+        
+        // count 
+        y = 15
+        countLabel?.frame = NSMakeRect(x, y, titleLabel!.frame.width, 20);
+        
+        // finished
+        x = self.frame.width - 32 - 10
+        y = (self.frame.height - 32) / 2
+        finishedImageView?.isHidden = !finished
+        finishedImageView?.frame = NSMakeRect(x, y, 32, 32);
     }
     
 }

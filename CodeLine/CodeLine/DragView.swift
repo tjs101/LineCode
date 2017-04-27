@@ -98,7 +98,8 @@ class DragView: NSImageView {
     }
     
     func onSettingsClick() {
-        
+        self.superview?.frame = NSMakeRect(0, 0, self.superview!.frame.width + 200, self.superview!.frame.height)
+        NSLog("self.superview %f %f", self.superview!.frame.height, self.superview!.frame.width)
     }
     
     func updateView() {
@@ -138,6 +139,7 @@ class DragView: NSImageView {
         for path in filePaths {
             
             DispatchQueue.global().async(execute: { () -> Void in
+                
                 self.subpathsOfPath(path: path as! String)
                 
                 DispatchQueue.main.async(execute: {
@@ -150,7 +152,6 @@ class DragView: NSImageView {
             do {
                 let attributes: NSDictionary = try FileManager.default.attributesOfItem(atPath: path as! String) as NSDictionary
                 fileType = attributes.object(forKey: FileAttributeKey.type) as! FileAttributeType
-
             } catch {
                 
             }
@@ -158,6 +159,7 @@ class DragView: NSImageView {
             let cell: CodeCellView = CodeCellView.init(frame: NSMakeRect(0, y, self.frame.width, CodeCellView.cellHeight))
             cell.cellType = (fileType == FileAttributeType.typeDirectory) ? CellType.folder : CellType.file
             cell.titleLabel?.stringValue = String.init(format: "%d.%@", index, filenameWithPath(path: path as! String))
+            cell.countLabel?.stringValue = "统计中.."
             bgScrollView?.addSubview(cell)
             
             y += CodeCellView.cellHeight
@@ -177,7 +179,7 @@ class DragView: NSImageView {
 
             if fileType == FileAttributeType.typeDirectory {// folder
                 
-                let paths: NSArray = try fileManager.subpathsOfDirectory(atPath: path) as NSArray
+                let paths: NSArray = try fileManager.contentsOfDirectory(atPath: path) as NSArray
                 
                 if paths.count > 0 {
                     
@@ -194,7 +196,13 @@ class DragView: NSImageView {
                 }
             }
             else { // file
-                fileCount += 1
+                if filenameWithPath(path: path).hasSuffix(".h") {
+                    fileCount += 1
+                }
+                
+                DispatchQueue.main.async(execute: {
+                    self.updateView()
+                })
             }
 
         } catch {
