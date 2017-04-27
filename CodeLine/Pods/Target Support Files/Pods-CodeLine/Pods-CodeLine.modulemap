@@ -1,0 +1,6 @@
+framework module Pods_CodeLine {
+  umbrella header "Pods-CodeLine-umbrella.h"
+
+  export *
+  module * { export * }
+}

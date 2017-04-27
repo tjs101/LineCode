@@ -13,9 +13,12 @@
 		66C116F61EAF31E4003A0AC7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C116F51EAF31E4003A0AC7 /* ViewController.swift */; };
 		66C116F81EAF31E4003A0AC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66C116F71EAF31E4003A0AC7 /* Assets.xcassets */; };
 		66C116FB1EAF31E4003A0AC7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C116F91EAF31E4003A0AC7 /* Main.storyboard */; };
+		E14B54F18645BA13052BF9CA /* Pods_CodeLine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C7199693C4DAA89FDE2A6A2 /* Pods_CodeLine.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		52E9378ABD5BCCED956D242F /* Pods-CodeLine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CodeLine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CodeLine/Pods-CodeLine.debug.xcconfig"; sourceTree = "<group>"; };
+		5C7199693C4DAA89FDE2A6A2 /* Pods_CodeLine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CodeLine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66324CB01EAF552C0070E0E3 /* DragView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
 		66324CB21EB077480070E0E3 /* CodeCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeCellView.swift; sourceTree = "<group>"; };
 		66C116F01EAF31E4003A0AC7 /* CodeLine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeLine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,6 +27,7 @@
 		66C116F71EAF31E4003A0AC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66C116FA1EAF31E4003A0AC7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66C116FC1EAF31E4003A0AC7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CA3E47FCE5F7099AEC9CF190 /* Pods-CodeLine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CodeLine.release.xcconfig"; path = "Pods/Target Support Files/Pods-CodeLine/Pods-CodeLine.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E14B54F18645BA13052BF9CA /* Pods_CodeLine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3561A2DF06E898AFB2418EF3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C7199693C4DAA89FDE2A6A2 /* Pods_CodeLine.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		66C116E71EAF31E4003A0AC7 = {
 			isa = PBXGroup;
 			children = (
 				66C116F21EAF31E4003A0AC7 /* CodeLine */,
 				66C116F11EAF31E4003A0AC7 /* Products */,
+				E3D49AA093162F4E7BA254B4 /* Pods */,
+				3561A2DF06E898AFB2418EF3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +82,15 @@
 			path = CodeLine;
 			sourceTree = "<group>";
 		};
+		E3D49AA093162F4E7BA254B4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				52E9378ABD5BCCED956D242F /* Pods-CodeLine.debug.xcconfig */,
+				CA3E47FCE5F7099AEC9CF190 /* Pods-CodeLine.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,9 +98,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66C116FF1EAF31E4003A0AC7 /* Build configuration list for PBXNativeTarget "CodeLine" */;
 			buildPhases = (
+				D7ECC8213C01EBB4D3B30037 /* [CP] Check Pods Manifest.lock */,
 				66C116EC1EAF31E4003A0AC7 /* Sources */,
 				66C116ED1EAF31E4003A0AC7 /* Frameworks */,
 				66C116EE1EAF31E4003A0AC7 /* Resources */,
+				40A3509938F6392B23FBC215 /* [CP] Embed Pods Frameworks */,
+				648264FDD4AB30BFC05FCEF2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -132,6 +159,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		40A3509938F6392B23FBC215 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CodeLine/Pods-CodeLine-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		648264FDD4AB30BFC05FCEF2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CodeLine/Pods-CodeLine-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D7ECC8213C01EBB4D3B30037 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		66C116EC1EAF31E4003A0AC7 /* Sources */ = {
@@ -253,6 +328,7 @@
 		};
 		66C117001EAF31E4003A0AC7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 52E9378ABD5BCCED956D242F /* Pods-CodeLine.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -260,12 +336,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quentin.CodeLine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		66C117011EAF31E4003A0AC7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA3E47FCE5F7099AEC9CF190 /* Pods-CodeLine.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -273,6 +351,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quentin.CodeLine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

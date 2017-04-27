@@ -17,15 +17,8 @@ class ViewController: NSViewController {
 
         // Do any additional setup after loading the view.
         backgroundImage = DragView.init(frame: self.view.frame)
-//        backgroundImage = DragView.init(frame: NSMakeRect(0, 0, 550, 350))
         self.view.addSubview(backgroundImage!)
-    
-        self.perform(#selector(ViewController.onClick), with: self, afterDelay: 10)
-    }
-    
-    func onClick() {
-        self.view.frame = NSMakeRect(0, 0, 550, 350)
-        viewDidLayout()
+
     }
 
     override var representedObject: Any? {
