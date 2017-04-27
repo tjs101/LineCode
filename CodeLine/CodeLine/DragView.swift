@@ -19,8 +19,10 @@ class DragView: NSImageView {
     
     // 文件变量
     var fileCount: Int = 0 // 文件数量
-    var folderCount: Int  = 0 // 文件夹数量
     var fileLineCount: Int = 0 // 多少行代码
+    
+    var currentFileCount: Int = 0 // 当前文件数量
+    var currentFileLineCount: Int = 0 // 当前多少行代码
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -106,30 +108,34 @@ class DragView: NSImageView {
         
     }
     
-    func updateView(filePath: String) {
+    func updateView(filePath: String, fileCount: Int, fileLineCount: Int) {
         placeholderImageView?.isHidden = true
         placeholderTitleLabel?.isHidden = true
         
         totalTitleLabel?.isHidden = false
-        totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount + folderCount, fileLineCount)
+        totalTitleLabel?.stringValue = String.init(format: "共%d个文件 %d行代码", fileCount, fileLineCount)
 //        totalTitleLabel?.attributedStringValue = NSAttributedString.init(string: "adf", attributes: [NSForegroundColorAttributeName : NSColor.red])
 //        
 //        NSMutableAttributedString
         
-        for view in bgScrollView!.subviews {
-            
-            if view.isKind(of: CodeCellView.self) {
+        if filePath != "" {
+            for view in bgScrollView!.subviews {
                 
-                let cellView: CodeCellView = view as! CodeCellView
-                
-                if cellView.filePath == filePath {
-                    cellView.finished = true
-                    cellView.layout()
+                if view.isKind(of: CodeCellView.self) {
+                    
+                    let cellView: CodeCellView = view as! CodeCellView
+                    
+                    if cellView.filePath == filePath {
+                        cellView.finished = true
+                        cellView.layout()
+                        cellView.countLabel?.stringValue = String.init(format: "%d个文件 %d行代码", fileCount, fileLineCount)
+                    }
+                    
                 }
                 
             }
-            
         }
+
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -142,8 +148,6 @@ class DragView: NSImageView {
         let pasteBoard: NSPasteboard = sender.draggingPasteboard()
 
         let filePaths: NSArray = pasteBoard.propertyList(forType: NSFilenamesPboardType) as! NSArray
-        
-        NSLog("files path == %@", filePaths)
 
         for view: NSView in bgScrollView!.subviews {
             if view.isKind(of: CodeCellView.classForCoder()) {
@@ -152,21 +156,30 @@ class DragView: NSImageView {
         }
         
         fileCount = 0
-        folderCount = 0
         fileLineCount = 0
 
         var y: CGFloat = 0
         var index: Int = 1 // 索引
         
+        let semaphore: DispatchSemaphore = DispatchSemaphore.init(value: filePaths.count)
+        
         for path in filePaths {
-            
+
             DispatchQueue.global().async(execute: { () -> Void in
                 
+//                semaphore.wait()
+
+                self.currentFileCount = 0
+                self.currentFileLineCount = 0
+                
                 self.subpathsOfPath(path: path as! String)
+                
 
                 DispatchQueue.main.async(execute: {
-                    self.updateView(filePath: path as! String)
+                    self.updateView(filePath: path as! String, fileCount: self.currentFileCount, fileLineCount: self.currentFileLineCount)
                 })
+                
+//                semaphore.signal()
             })
 
             // file type
@@ -211,7 +224,7 @@ class DragView: NSImageView {
                         self.subpathsOfPath(path: String.init(format: "%@/%@", path, aPath as! CVarArg))
                         
                         DispatchQueue.main.async(execute: {
-                            self.updateView(filePath: path)
+                            self.updateView(filePath: "", fileCount: 0, fileLineCount: 0)
                         })
                     }
                 }
@@ -219,10 +232,11 @@ class DragView: NSImageView {
             else { // file
                 if filenameWithPath(path: path).hasSuffix(".h") {
                     fileCount += 1
+                    currentFileCount += 1
                 }
                 
                 DispatchQueue.main.async(execute: {
-                    self.updateView(filePath: path)
+                    self.updateView(filePath: "", fileCount: 0, fileLineCount: 0)
                 })
             }
 
